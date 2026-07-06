@@ -1,0 +1,20 @@
+G=6.67e-11
+c=3e8
+h=1.055e-34
+k=1.381e-23
+sigma=5.670e-8
+
+M=float(input("Enter mass: "))
+
+r_s = 2 * G * M / c**2
+T = h * c**3 / 8 * 3.14159 * G * M * k
+A = 4 * 3.14159 * r_s**2
+P = sigma * A * T**4
+t_evap = 5120 * 3.14159 * G**2 * M**3 / (h * c**4)
+
+print (f"Schawrzchild radius: {r_s:.3e} m")
+print (f"Hawking temperature: {T:.3e} K")
+print (f"Power radiated: {P:.3e} W")
+print (f"Evaporation time: {t_evap:.3e} s")
+
+
