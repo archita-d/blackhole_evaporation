@@ -6,7 +6,7 @@ This repo models Hawking radiation and black hole evaporation over time
 
 ### Code
 
-#### 'formula calculations'
+#### 'formulacalculations'
 Calculates black hole radius, Hawking temperature, and total radiated power based on mass
 
 #### 'timestepmass_nonadaptive'
