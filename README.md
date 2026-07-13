@@ -25,5 +25,5 @@ Plot of Hawking temperature vs. mass across a range of masses
 ### 'microsecondmass'
 Simulates mass loss over time for a 1e6 kg black hole, using microsecond time steps (dt = 1e-6 seconds) across the full evaporation lifetime (about 85 seconds)
 
-### `mass_vs_time_micro_full.png`
+### 'mass_vs_time_micro_full.png'
 Plot of mass vs time for the full evaporation of a 1e6 kg black hole, using microsecond time steps
