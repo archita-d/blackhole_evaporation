@@ -1,4 +1,4 @@
-# Primordial Black Hold Evaporation
+# Primordial Black Hole Evaporation
 
 This repo models Hawking radiation and black hole evaporation over time 
 
