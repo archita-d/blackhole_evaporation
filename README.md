@@ -6,7 +6,7 @@ This repo models Hawking radiation and black hole evaporation over time
 All of these files showcase core Hawking radiation formulas (radius, temperature, power) as well as fixed-timestep simulations of mass/temperature/power, at 1-second and microsecond resolution, mostly done for testing purposes. 
 
 #### `adaptivetemp_test`
-This file successfully simulates temperature and mass loss for a 1e6 kg black hole using an adaptive time step (`dt = 0.001 * M * c**2 / P`) instead of a fixed one, so dt is automatically shrinking as the black hole nears the end of its life instead of using the previous constant microsecond step the whole way through.
+This file successfully simulates temperature and mass loss for a 1e6 kg black hole using an adaptive time step (`dt = 0.001 * M * c**2 / P`) instead of a fixed one, so dt is automatically shrinking as the black hole nears the end of its life instead of using the previous constant microsecond step.
 
 The original microsecond simulation used a constant `dt = 1e-6 s` for every step, which wastes steps early on when it was not needed (the black hole is barely changing). I was able to recompute `dt` each step based on the current mass and power which allows the simulation take large steps early (when change is slow) and small steps near the end (when change is fast). 
 
