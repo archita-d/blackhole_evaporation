@@ -14,7 +14,8 @@ The original microsecond simulation used a constant `dt = 1e-6 s` for every step
 this file derives a closed-form formula for black hole mass as a function of time directly from the Hawking radiation law, and then uses it to compare evaporation across a wide range of masses without simulating each one.
 
 Since power `P ∝ 1/M²` (from combining area `∝ M²` and temperature⁴ `∝ 1/M⁴`) -  came from `formulacalculations`, and `dM/dt = -P/c²`, solving this rate equation gives:
-M(t) = cube_root(M₀³ - 3k·t)        where k = C/c², C = power(1.0) - C gives us all the constants 
+M(t) = cube_root(M₀³ - 3k·t)        where k = C/c², C = power(1.0) 
+notes: C gives us all the constants from the power function (see `formulacalculations`)
 
 and total lifetime:
 t_life = M₀³ · c² / (3C)
