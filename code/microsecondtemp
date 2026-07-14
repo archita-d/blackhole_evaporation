@@ -44,7 +44,7 @@ def step_full(M, dt, max_steps, save_every):
     return M, time_elapsed, history
 
 
-#  evaporation of 1e6 kg, tracking temperature, microsecond steps
+#  evaporation of 1e6 kg, tracking temperature
 M = 1e6
 dt = 1e-6                  # microseconds
 max_steps = 200_000_000    
