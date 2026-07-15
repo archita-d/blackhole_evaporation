@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+G = 6.67e-11
+c = 3e8
+h = 6.626e-34    
+k = 1.381e-23
+
+def radius(M):
+    return 2 * G * M / c**2
+ 
+def temperature(M):
+    return (h / (2 * 3.14159)) * c**3 / (8 * 3.14159 * G * M * k)
+
+# from the blackbody photon function (gamma-ray/sec/Mev/4p/sq-cm)
+
+MeV_to_joules = 1.602176634e-13
+
+def blackbody_photon_function(E_MeV, T):
+    E = E_MeV * MeV_to_joules   # convert MeV to Joules for the exponential
+    return (2 * E**2) / (h**3 * c**2) / (np.exp(E / (k * T)) - 1)
+
+# step one from slide eight which is multiplying by the sq-cm of the blackbody surface
+
+def step1_multiply_by_blackbody_surface(M,E):
+    T = temperature(M)
+    r_s = radius(M)
+    surface_area_cm2 = 4 * 3.14159 * (r_s * 100)**2 # converts m to cm
+
+    photon_function_value = blackbody_photon_function(E, T)
+
+    return photon_function_value * surface_area_cm2
+
+M_test = 1e11
+E_test = 0.5
+result = step1_multiply_by_blackbody_surface(M_test, E_test)
+print("Result:", result)
