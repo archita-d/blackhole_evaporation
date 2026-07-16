@@ -30,7 +30,8 @@
  
 \section{Introduction}
 % what are primordial black holes and why study their evaporation,
-% why this mass range matters, what detectors are searching for it ?? 
+% why this mass range matters, what detectors are searching for it ??
+% also define some terms the reader might be unfamiliar with 
  
 \section{Background: Hawking Radiation}
 % give a quick overview of the history of hawking radiation and its importance + all the formulas involved
@@ -76,7 +77,7 @@
  
 \section{Discussion}
 % caveats, greybody factors, next steps
-% theres probably more sections to add but this is it for the outline
+% theres probably more sections + subsections to add but this is it for the outline 
  
 \section{Conclusion}
  
