@@ -14,88 +14,88 @@ def temperature(M):
 
 # from the blackbody photon function (gamma-ray/sec/Mev/4p/sq-cm)
 MeV_to_joules = 1.602176634e-13
-def blackbody_photon_function(E_MeV, T):
+def b_function(E_MeV, T):
     E = E_MeV * MeV_to_joules   # convert MeV to Joules for the exponential
     return (2 * E**2) / (h**3 * c**2) / (np.exp(E / (k * T)) - 1)
 
 # step one from slide eight which is multiplying by the sq-cm of the blackbody surface
-def step1_multiply_by_blackbody_surface(M, E):
+def step1(M, E):
     T = temperature(M)
     r_s = radius(M)
-    surface_area_cm2 = 4 * 3.14159 * (r_s * 100)**2  # converts m to cm
-    photon_function_value = blackbody_photon_function(E, T)
-    return photon_function_value * surface_area_cm2
+    surface_area_cm2 = 4 * 3.14159 * (r_s * 100)**2  
+    p_function_value = b_function(E, T)
+    return p_function_value * surface_area_cm2
 
 # step 2 is to multiply by the time sample of the gamma-ray detector (1 microsec)
-def step2_multiply_by_time_sample(M, E, time_sample):
-    step1_result = step1_multiply_by_blackbody_surface(M, E)
+def step2(M, E, time_sample):
+    step1_result = step1(M, E)
     return step1_result * time_sample
 
 # step 3 is to integrate the blackbody function for each of the energy ranges
-def step3_gamma_rays_in_energy_range(M, E_low, E_high, time_sample):
+def step3(M, E_low, E_high, time_sample):
     T = temperature(M)
     r_s = radius(M)
-    surface_area_cm2 = 4 * 3.14159 * (r_s * 100)**2  # convert m to cm
+    surface_area_cm2 = 4 * 3.14159 * (r_s * 100)**2  
 
     E_values = np.linspace(E_low, E_high, 200)
-    photon_function_values = blackbody_photon_function(E_values, T)
-    integrated_over_energy_range = np.trapezoid(photon_function_values, E_values)
+    p_function_values = b_function(E_values, T)
+    integrated_range = np.trapezoid(p_function_values, E_values)
 
-    gamma_rays_into_4p = integrated_over_energy_range * surface_area_cm2 * time_sample
+    gamma_rays = integrated_range * surface_area_cm2 * time_sample
 
-    return gamma_rays_into_4p
+    return gamma_rays
 
 # step 4 is to multiply by how much area the detector subtends at distance D
-def step4_detected_gamma_rays(M, E_low, E_high, time_sample, D, A_detector):
-    gamma_rays_into_4p = step3_gamma_rays_in_energy_range(M, E_low, E_high, time_sample)
-    detector_subtend = A_detector / (4 * 3.14159 * D**2)
-    return gamma_rays_into_4p * detector_subtend
-
+def step4(M, E_low, E_high, time_sample, D, A_detector):
+    gamma_rays = step3(M, E_low, E_high, time_sample)
+    detector = A_detector / (4 * 3.14159 * D**2)
+    return gamma_rays * detector
+    
 # the 32-element energy bin array 
 # NOTE: these edges are a PLACEHOLDER
 
-energy_bin_edges = np.linspace(0.25, 19.9, 33) 
+energy_bin = np.linspace(0.25, 19.9, 33) 
 
-def gamma_ray_array(M, energy_bin_edges, time_sample, D, A_detector):
+def gamma_array(M, energy_bin, time_sample, D, A_detector):
     counts = []
-    for i in range(len(energy_bin_edges) - 1):
-        E_low = energy_bin_edges[i]
-        E_high = energy_bin_edges[i + 1]
-        count = step4_detected_gamma_rays(M, E_low, E_high, time_sample, D, A_detector)
+    for i in range(len(energy_bin) - 1):
+        E_low = energy_bin[i]
+        E_high = energy_bin[i + 1]
+        count = step4(M, E_low, E_high, time_sample, D, A_detector)
         counts.append(count)
     return np.array(counts)
 
 
-M_test = 1e11        # kg, placeholder
+M_test = 1e11       
 E_test = 0.5         # MeV, placeholder
-E_low_test, E_high_test = 0.25, 0.75   # MeV, first energy range from slide 7
-time_sample_test = 1e-6   # 1 microsecond, per slide 7
+E_low, E_high = 0.25, 0.75   
+time_sample = 1e-6   
 D_test = 1.0              # placeholder distance (cm)
-A_detector_test = 1.0     # placeholder detector area (cm^2)
+A_detector = 1.0     # placeholder detector area (cm^2)
 
-result_step2 = step2_multiply_by_time_sample(M_test, E_test, time_sample_test)
+result_step2 = step2(M_test, E_test, time_sample)
 print("Step 2 result:", result_step2)
 
-result_step3 = step3_gamma_rays_in_energy_range(M_test, E_low_test, E_high_test, time_sample_test)
+result_step3 = step3(M_test, E_low, E_high, time_sample)
 print("Step 3 result:", result_step3)
 
-result_step4 = step4_detected_gamma_rays(M_test, E_low_test, E_high_test, time_sample_test, D_test, A_detector_test)
+result_step4 = step4(M_test, E_low, E_high, time_sample, D_test, A_detector)
 print("Step 4 (detected) result:", result_step4)
 
-gamma_array = gamma_ray_array(M_test, energy_bin_edges, time_sample_test, D_test, A_detector_test)
+gamma_array = gamma_array(M_test, energy_bin, time_sample, D_test, A_detector)
 print("Gamma-ray array (32 elements):")
 print(gamma_array)
 
 
-# plotting a bar chart of detected gamma-ray counts across all 32 energy bins just to visualize 
+# plotting a bar chart of  gamma-ray counts across 32 energy bins just to visualize 
 # results are not significant as to placeholder values
 
-def plot_gamma_ray_spectrum(energy_bin_edges, gamma_array):
-    bin_centers = (energy_bin_edges[:-1] + energy_bin_edges[1:]) / 2
-    bin_widths = np.diff(energy_bin_edges)
+def plot_spectrum(energy_bin, gamma_array):
+    bincenters = (energy_bin[:-1] + energy_bin[1:]) / 2
+    binwidths = np.diff(energy_bin)
 
     plt.figure(figsize=(10, 6))
-    plt.bar(bin_centers, gamma_array, width=bin_widths, color='blue', alpha=0.6, edgecolor='black')
+    plt.bar(bincenters, gamma_array, width=binwidths, color='blue', alpha=0.6, edgecolor='black')
     plt.xlabel("Photon Energy (MeV)")
     plt.ylabel("Detected Gamma-Rays")
     plt.title("Detected Gamma-Ray Counts Across Energy Bins")
@@ -103,7 +103,7 @@ def plot_gamma_ray_spectrum(energy_bin_edges, gamma_array):
     plt.savefig("gamma_ray_spectrum.png")
     plt.show()
 
-plot_gamma_ray_spectrum(energy_bin_edges, gamma_array)
+plot_spectrum(energy_bin, gamma_array)
 
 # plotting the photon function curve with integrated energy range shown just for visual purposes
 
@@ -111,10 +111,10 @@ def plot_integration(M, E_low, E_high, plot_range_low=0.01, plot_range_high=2.0)
     T = temperature(M)
 
     E_full = np.linspace(plot_range_low, plot_range_high, 500)
-    photon_full = blackbody_photon_function(E_full, T)
+    photon_full = b_function(E_full, T)
 
     E_bin = np.linspace(E_low, E_high, 200)
-    photon_bin = blackbody_photon_function(E_bin, T)
+    photon_bin = b_function(E_bin, T)
 
     plt.figure(figsize=(8, 6))
     plt.plot(E_full, photon_full, color='blue', label='Blackbody photon function')
@@ -128,4 +128,4 @@ def plot_integration(M, E_low, E_high, plot_range_low=0.01, plot_range_high=2.0)
     plt.savefig("photon_function_integration.png")
     plt.show()
 
-plot_integration(M_test, E_low_test, E_high_test)
+plot_integration(M_test, E_low, E_high)
