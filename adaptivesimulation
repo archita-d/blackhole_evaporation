@@ -1,0 +1,78 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from formulas import radius, temperature, power, c, time_remaining
+
+# constants - all SI units
+G = 6.67e-11          # gravitational constant, m^3/(kg s^2)
+c = 3e8                # speed of light, m/s
+hbar = 1.055e-34   # h bar, aka plancks constant
+k = 1.381e-23          # boltzmanns constant, J/K
+sigma = 5.670e-8       # stefan boltzmann constant
+
+# a demo that tracks mass, temperature, and power together over time,
+# using the adaptive step to move through the evaporation,
+# and time_remaining (analytical, precision-safe) for the x-axis to give
+# an idea of the relationships between these quantities 
+
+def run_evolution(M0, max_steps=200000, mass_cutoff=1e-6, save_every=1):
+    M = M0
+    history_time = []
+    history_mass = []
+    history_temp = []
+    history_power = []
+
+    for i in range(max_steps):
+        P = power(M)
+        dt = 0.001 * M * c**2 / P   # adaptive time step
+        T = temperature(M)
+
+        t_remaining = time_remaining(M)   # precision-safe, computed fresh from M
+
+        if M < mass_cutoff:
+            print("Mass reached 0 at step", i, "time remaining:", t_remaining, "s")
+            break
+
+        dM = (P * dt) / c**2
+        M = M - dM
+
+        if i % save_every == 0:
+            history_time.append(t_remaining)
+            history_mass.append(M)
+            history_temp.append(T)
+            history_power.append(P)
+
+    return (np.array(history_time), np.array(history_mass),
+            np.array(history_temp), np.array(history_power))
+
+
+M0 = 1.73e11   # crossover mass
+time_before, mass_hist, temp_hist, power_hist = run_evolution(M0)
+
+# one combined figure - mass, temperature, power vs time before evaporation
+# x-axis is log scale, time before evaporation, 0 (evaporation) on the right
+fig, axes = plt.subplots(3, 1, figsize=(9, 12), sharex=True)
+
+axes[0].plot(time_before, mass_hist, color='navy')
+axes[0].set_ylabel("Mass (kg)")
+axes[0].set_yscale('log')
+axes[0].set_title(f"Mass, Temperature, and Power vs. Time Before Evaporation (M0 = {M0:.2e} kg)")
+axes[0].grid(True, which='both', alpha=0.4)
+
+axes[1].plot(time_before, temp_hist, color='darkred')
+axes[1].set_ylabel("Temperature (K)")
+axes[1].set_yscale('log')
+axes[1].grid(True, which='both', alpha=0.4)
+
+axes[2].plot(time_before, power_hist, color='darkgreen')
+axes[2].set_ylabel("Power (W)")
+axes[2].set_yscale('log')
+axes[2].set_xlabel("Time before evaporation (s)")
+axes[2].grid(True, which='both', alpha=0.4)
+
+for ax in axes:
+    ax.set_xscale('log')
+    ax.invert_xaxis()   # so time=0 (evaporation) sits on the right
+
+plt.tight_layout()
+plt.savefig("mass_temp_power_vs_time.png", dpi=200)
+plt.show()
