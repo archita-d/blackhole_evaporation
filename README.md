@@ -15,6 +15,18 @@ methods in full, and presenting the final results.
 
 Please note that the paper is still a work in progress!
 
+## Getting the code
+
+First, clone this repository to your own computer:
+
+```bash
+git clone https://github.com/archita-d/primordial_blackholeevaporation.git
+cd primordial_blackholeevaporation
+```
+
+All commands in the rest of this README assume you are inside this
+`primordial_blackholeevaporation` folder.
+
 ## Prerequisites
 
 You will need Python 3 and the following packages:
