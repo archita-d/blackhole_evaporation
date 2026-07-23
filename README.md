@@ -13,6 +13,8 @@ Wien-like peak location).
 There is also a paper (in `report/`) describing the physics and
 methods in full, and presenting the final results.
 
+Please note that the paper is still a work in progress!
+
 ## Prerequisites
 
 You will need Python 3 and the following packages:
@@ -141,4 +143,9 @@ law) and does not include greybody factors or the emission of particle
 species other than photons (for example, electron-positron pairs, which
 become relevant below approximately 2e13 kg).
 
-Please note that this is still a work in progress and will be completed soon.
+Please note that this project is still a work in progress and additional sections will be added shortly.
+
+## Acknowledgements
+I would like to thank my mentor, Ed Fenimore of Los Alamos National Laboratory, for his guidance and feedback throughout this project. I would also like to thank the Institute for Computing inResearch for organizing this program.
+
+Some short snippets of code (<5 lines) were written with the assistance of generative AI.
