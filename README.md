@@ -4,26 +4,30 @@
 
 This repository models the evaporation of primordial black holes (PBHs)
 via Hawking radiation. It derives the mass of a PBH that would be
-completing its evaporation in the present epoch. It then  builds an adaptive
+completing its evaporation in the present epoch, builds an adaptive
 numerical simulation of that evaporation, and predicts the photon
 spectrum a real gamma-ray detector would observe, validating the
 result against known blackbody physics (Stefan-Boltzmann law and the
 Wien-like peak location).
 
-There is also a paper (in report/) describing the physics and
-methods in full, and presenting the final results. (in progress)
+There is also a paper (in `report/`) describing the physics and
+methods in full, and presenting the final results.
 
 ## Prerequisites
 
 You will need Python 3 and the following packages:
 
+```bash
 pip install numpy matplotlib --break-system-packages
+```
 
-(Omit --break-system-packages if you are using a virtual environment.)
+(Omit `--break-system-packages` if you are using a virtual environment.)
 
 To build the paper you will also need a LaTeX distribution, for example:
 
+```bash
 sudo apt install texlive-latex-base texlive-latex-extra
+```
 
 ## How to run the code and reproduce all results
 
@@ -31,70 +35,80 @@ All commands below should be run from the root of this repository.
 Each script is self-contained and can be run on its own.
 
 ### 1. Core physics formulas
-File: code/formulacalculations.py
+File: `code/formulacalculations.py`
 
 This computes radius, temperature, and radiated power for a range of
-black hole masses, as a sanity check on the underlying physics. This files assits it understanding the core relationships between these important quantities. 
+black hole masses, as a sanity check on the underlying physics.
 
+```bash
 python3 code/formulacalculations.py
+```
 
 Expected output: printed radius, temperature, and power for several
 test masses.
 
 ### 2. Deriving the crossover mass
-File: code/lifetimecomparison.py
+File: `code/lifetimecomparison.py`
 
 This derives the analytical mass-loss and lifetime formulas from
 first principles, solves for the mass of a PBH that would be
 completing its evaporation today, and produces a comparison plot
 across three mass regimes.
 
+```bash
 python3 code/lifetimecomparison.py
+```
 
 Expected output: prints the crossover mass (approximately 1.73e11 kg)
-and saves three_mass_regimes.png in plots/.
+and saves `three_mass_regimes.png` in `plots/`.
 
 ### 3. Adaptive evaporation simulation
-File: code/adaptivesimulation.py
+File: `code/adaptivesimulation.py`
 
 This runs a full adaptive time-step simulation of the crossover-mass
 black hole from formation to complete evaporation, and cross-validates
 the simulated lifetime against the analytical formula from step 2.
 
+```bash
 python3 code/adaptivesimulation.py
+```
 
 Expected output: prints the simulated lifetime (should closely match
 the analytical value from step 2, within about 1%).
 
 ### 4. Detector pipeline
-File: code/slide8_photon.py
+File: `code/slide8_photon.py`
 
 This builds the four-step process for converting the blackbody photon
 spectrum into a predicted 32-bin detector count array, for a given
 mass, distance, and detector area. It also produces a bar-chart
 visualization of the resulting spectrum.
 
+```bash
 python3 code/slide8_photon.py
+```
 
 Expected output: prints step-by-step intermediate results and the
-final 32-element count array, and saves gamma_ray_spectrum.png
-and photon_function_integration.png in plots/.
+final 32-element count array, and saves `gamma_ray_spectrum.png`
+and `photon_function_integration.png` in `plots/`.
 
 ### 5. Peak energy and time-step tracking
-File: code/dtpeakenergy.py
+File: `code/dtpeakenergy.py`
 
 This tracks the adaptive time step size and the black hole's peak
 emission energy as functions of time leading up to full evaporation.
 
+```bash
 python3 code/dtpeakenergy.py
+```
 
-Expected output: saves dt_vs_time.png and peak_energy_vs_time.png
-in plots/, and prints the raw dt and peak-energy values.
+Expected output: saves `dt_vs_time.png` and `peak_energy_vs_time.png`
+in `plots/`, and prints the raw dt and peak-energy values.
 
 ### 6. Blackbody validation
-File: code/validating.py
+File: `code/validating.py`
 
-This is the key validation of the entire pipeline and is essential to our research.  It converts the
+This is the key validation of the entire pipeline. It converts the
 32-bin detector counts into a count spectrum and an energy spectrum,
 checks that the energy spectrum peaks at the expected location
 (approximately 3 times kT), checks that the spectrum's slope below
@@ -102,13 +116,15 @@ the peak matches the expected Rayleigh-Jeans value of 2.0, and
 checks that the total power recovered from the spectrum matches the
 independent Stefan-Boltzmann formula.
 
+```bash
 python3 code/validating.py
+```
 
 Expected output:
 - Energy spectrum peak at approximately 2.99 times kT
 - Slope below the peak of approximately 2.0
 - Recovered-power to Stefan-Boltzmann ratio of approximately 0.989
-- Saves step_counts_debug.png in plots/, showing the full
+- Saves `step_counts_debug.png` in `plots/`, showing the full
   blackbody-shaped spectrum
 
 ## Key results to expect
@@ -124,3 +140,179 @@ This model treats the black hole as an ideal blackbody (Stefan-Boltzmann
 law) and does not include greybody factors or the emission of particle
 species other than photons (for example, electron-positron pairs, which
 become relevant below approximately 2e13 kg).
+
+## Building the paper
+File: `report/paper.tex`
+
+Once the above scripts have been run and all plots have been generated,
+move any plots produced in the repository root into the `plots/` folder,
+then build the paper with:
+
+```bash
+cd report
+pdflatex paper.tex
+```
+
+You will then be able to read the compiled paper in `report/paper.pdf`.
+EOF
+OUTER
+Output
+
+cat > README.md << 'EOF'
+# primordial_blackholeevaporation
+
+## What is this?
+
+This repository models the evaporation of primordial black holes (PBHs)
+via Hawking radiation. It derives the mass of a PBH that would be
+completing its evaporation in the present epoch, builds an adaptive
+numerical simulation of that evaporation, and predicts the photon
+spectrum a real gamma-ray detector would observe, validating the
+result against known blackbody physics (Stefan-Boltzmann law and the
+Wien-like peak location).
+
+There is also a paper (in `report/`) describing the physics and
+methods in full, and presenting the final results.
+
+## Prerequisites
+
+You will need Python 3 and the following packages:
+
+```bash
+pip install numpy matplotlib --break-system-packages
+```
+
+(Omit `--break-system-packages` if you are using a virtual environment.)
+
+To build the paper you will also need a LaTeX distribution, for example:
+
+```bash
+sudo apt install texlive-latex-base texlive-latex-extra
+```
+
+## How to run the code and reproduce all results
+
+All commands below should be run from the root of this repository.
+Each script is self-contained and can be run on its own.
+
+### 1. Core physics formulas
+File: `code/formulacalculations.py`
+
+This computes radius, temperature, and radiated power for a range of
+black hole masses, as a sanity check on the underlying physics.
+
+```bash
+python3 code/formulacalculations.py
+```
+
+Expected output: printed radius, temperature, and power for several
+test masses.
+
+### 2. Deriving the crossover mass
+File: `code/lifetimecomparison.py`
+
+This derives the analytical mass-loss and lifetime formulas from
+first principles, solves for the mass of a PBH that would be
+completing its evaporation today, and produces a comparison plot
+across three mass regimes.
+
+```bash
+python3 code/lifetimecomparison.py
+```
+
+Expected output: prints the crossover mass (approximately 1.73e11 kg)
+and saves `three_mass_regimes.png` in `plots/`.
+
+### 3. Adaptive evaporation simulation
+File: `code/adaptivesimulation.py`
+
+This runs a full adaptive time-step simulation of the crossover-mass
+black hole from formation to complete evaporation, and cross-validates
+the simulated lifetime against the analytical formula from step 2.
+
+```bash
+python3 code/adaptivesimulation.py
+```
+
+Expected output: prints the simulated lifetime (should closely match
+the analytical value from step 2, within about 1%).
+
+### 4. Detector pipeline
+File: `code/slide8_photon.py`
+
+This builds the four-step process for converting the blackbody photon
+spectrum into a predicted 32-bin detector count array, for a given
+mass, distance, and detector area. It also produces a bar-chart
+visualization of the resulting spectrum.
+
+```bash
+python3 code/slide8_photon.py
+```
+
+Expected output: prints step-by-step intermediate results and the
+final 32-element count array, and saves `gamma_ray_spectrum.png`
+and `photon_function_integration.png` in `plots/`.
+
+### 5. Peak energy and time-step tracking
+File: `code/dtpeakenergy.py`
+
+This tracks the adaptive time step size and the black hole's peak
+emission energy as functions of time leading up to full evaporation.
+
+```bash
+python3 code/dtpeakenergy.py
+```
+
+Expected output: saves `dt_vs_time.png` and `peak_energy_vs_time.png`
+in `plots/`, and prints the raw dt and peak-energy values.
+
+### 6. Blackbody validation
+File: `code/validating.py`
+
+This is the key validation of the entire pipeline. It converts the
+32-bin detector counts into a count spectrum and an energy spectrum,
+checks that the energy spectrum peaks at the expected location
+(approximately 3 times kT), checks that the spectrum's slope below
+the peak matches the expected Rayleigh-Jeans value of 2.0, and
+checks that the total power recovered from the spectrum matches the
+independent Stefan-Boltzmann formula.
+
+```bash
+python3 code/validating.py
+```
+
+Expected output:
+- Energy spectrum peak at approximately 2.99 times kT
+- Slope below the peak of approximately 2.0
+- Recovered-power to Stefan-Boltzmann ratio of approximately 0.989
+- Saves `step_counts_debug.png` in `plots/`, showing the full
+  blackbody-shaped spectrum
+
+## Key results to expect
+
+- Crossover mass (evaporating in the present epoch): approximately 1.73e11 kg
+- Cross-validated lifetime (analytical vs. simulated): agreement within approximately 1%
+- Blackbody validation: peak at 2.99 x kT, slope of 2.0, power ratio of 0.989
+- Peak emission energy climbs from approximately 100 MeV to over 1e19 MeV over the final moments of evaporation
+
+## Known limitations
+
+This model treats the black hole as an ideal blackbody (Stefan-Boltzmann
+law) and does not include greybody factors or the emission of particle
+species other than photons (for example, electron-positron pairs, which
+become relevant below approximately 2e13 kg).
+
+## Building the paper
+File: `report/paper.tex`
+
+Once the above scripts have been run and all plots have been generated,
+move any plots produced in the repository root into the `plots/` folder,
+then build the paper with:
+
+```bash
+cd report
+pdflatex paper.tex
+```
+
+You will then be able to read the compiled paper in `report/paper.pdf`.
+EOF
