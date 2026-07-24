@@ -11,37 +11,35 @@ def radius(M):
 
 def temperature(M):
     return (h / (2 * 3.14159)) * c**3 / (8 * 3.14159 * G * M * k)
-    # hawking temp - hotter as mass shrinks
-
+    # hawking temp 
 def power(M):
-    r_s = radius(M)                    # radius for this mass
-    A = 4 * 3.14159 * r_s**2           # surface area
-    T = temperature(M)                 # temp for this mass
-    return 5.670e-8 * A * T**4         # stefan-boltzmann law
+    r_s = radius(M)                   
+    A = 4 * 3.14159 * r_s**2           
+    T = temperature(M)                 
+    return 5.670e-8 * A * T**4        
 
-MeV_to_joules = 1.602176634e-13        # 1 mev in joules
+MeV_to_joules = 1.602176634e-13        
 def b_function(E_MeV, T):
     E = E_MeV * MeV_to_joules          # convert to joules
     x = E / (k*T)                      # ratio of photon energy to thermal energy
-    x = np.minimum(x, 700)             # cap it so it never overflows
-    denominator = np.expm1(x)          # e^x - 1
+    x = np.minimum(x, 700)             # cap it so it never ovrflows
+    denominator = np.expm1(x)     
     denominator = np.where(denominator == 0, 1e-300, denominator)
-    # dodge a divide-by-zero if denominator rounds to exactly 0
+   
     return (2 * E**2) / (h**3 * c**2) / denominator
     # blackbody photon-count spectrum at this energy/temp
 
 def peak_energy_MeV(T, n_points=2000):
-    # the peak of a blackbody spectrum sits at roughly 3x kT - use that to set a generous search window
-    kT_MeV = (k * T) / MeV_to_joules   # thermal energy in MeV
-    search_low = kT_MeV * 0.01         # search a bit below kT, just in case
-    search_high = kT_MeV * 20          # comfortably above where the peak could be
-    # the search window scales with T now,
-    # so it never gets "stuck" at some fixed ceiling like the old 1000 MeV versin did
+    # the peak of a blackbody spectrum sits at roughly 3x kT so we cn use that to set a generous search window
+    kT_MeV = (k * T) / MeV_to_joules   
+    search_low = kT_MeV * 0.01        
+    search_high = kT_MeV * 20          
+    
     E_values = np.logspace(np.log10(search_low), np.log10(search_high), n_points)
     # 2000 sample points across that range
-    p_values = b_function(E_values, T)   # photon density at each sample point
-    peak_idx = np.argmax(p_values)       # which index has the highest density
-    return E_values[peak_idx]            # the energy at that peak
+    p_values = b_function(E_values, T)   
+    peak_idx = np.argmax(p_values)       
+    return E_values[peak_idx]            
 
 def run_dt_and_peak_tracking(M0, max_steps=100000, mass_cutoff=1e-6, save_every=50, xraythres=1e6):
     M = M0                              # starting mass
@@ -58,7 +56,7 @@ def run_dt_and_peak_tracking(M0, max_steps=100000, mass_cutoff=1e-6, save_every=
         dt = 0.001 * M * c**2 / P      
         T = temperature(M)            
 
-        if M < mass_cutoff:             # basically fully evaporated
+        if M < mass_cutoff:             # basically fully evapoated
             print("Mass reached 0 at step", i, "time:", time_elapsed, "s")
             break
 
@@ -66,7 +64,7 @@ def run_dt_and_peak_tracking(M0, max_steps=100000, mass_cutoff=1e-6, save_every=
         M = M - dM                      # update mass
         time_elapsed += dt              # update clock
 
-        if i % save_every == 0:         # every 50th step save a snapshot
+        if i % save_every == 0:       
             history_time.append(time_elapsed)
             history_dt.append(dt)
             history_mass.append(M)
@@ -82,18 +80,18 @@ def run_dt_and_peak_tracking(M0, max_steps=100000, mass_cutoff=1e-6, save_every=
     # hand back all 5 histories
 
 
-M0_run = 1.73e11                        # our actual mass
+M0_run = 1.73e11                       
 ht, hdt, hmass, htemp, hpeak = run_dt_and_peak_tracking(M0_run)
 # run the simulation and unpack all 5 returned arrays
 
-# Plot 1: dt vs time
+# Plot 1 is dt vs time
 plt.figure(figsize=(9, 6))
 plt.plot(ht, hdt, marker='o', linestyle='none', color='darkgreen')
-# points only, no line - so we can see how sparse/dense the actual samples are
+# points onlye
 plt.xlabel("Time (s)")
 plt.ylabel("dt (s)")
 plt.title(f"Adaptive Time Step (dt) vs. Time (M0 = {M0_run:.2e} kg)")
-plt.xscale('log')                       # dt spans a huge rnge, needs log scale
+plt.xscale('log')                      
 plt.yscale('log')
 plt.grid(True, which='both', alpha=0.4)
 plt.tight_layout()
@@ -114,4 +112,4 @@ plt.savefig("peak_energy_vs_time.png", dpi=200)
 plt.show()
 
 print("dt values:", hdt)                 # list the raw dt numbers to check them
-print("Peak energy values (MeV):", hpeak) # list the raw peak-energy numbers to
+print("Peak energy values (MeV):", hpeak) # list the raw peak-enrgy numbers to
