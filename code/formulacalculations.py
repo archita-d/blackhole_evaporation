@@ -1,23 +1,23 @@
 import numpy as np
 
-# constants - all SI units
+# constants 
 G = 6.67e-11          # gravitational constant, m^3/(kg s^2)
 c = 3e8                # speed of light, m/s
 hbar = 1.055e-34   # h bar, aka plancks constant
-k = 1.381e-23          # boltzmanns constant, J/K
+k = 1.381e-23          # boltzanns constant, J/K
 sigma = 5.670e-8       # stefan boltzmann constant
 MeV_to_joules = 1.602176634e-13   # need this bc our bins are in MeV but the constants are all in joules
 
 def radius(M):
-    # schwarzchild radius, just depends on mass
+    # schwarzchild radius
     return 2 * G * M / c**2
 
 def temperature(M):
-    # hawking temp - uses hbar not h!!
+    # hawking temp 
     return hbar * c**3 / (8 * 3.14159 * G * M * k)
 
 def power(M):
-    # stefan boltzmann law, total power radiated
+    # stefan boltzmann law which calclates total power radiated
     r_s = radius(M)
     A = 4 * 3.14159 * r_s**2
     T = temperature(M)
